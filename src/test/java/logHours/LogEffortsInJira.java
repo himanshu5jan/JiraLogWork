@@ -102,6 +102,7 @@ public class LogEffortsInJira {
 	
 	@Test(priority=1,description="starting it here")
 	public void jiraLoginTest() {
+		// version 2
 		logger=report.startTest("JiraLoginTest");
 		driver.get("https://himanshupandey.atlassian.net");
 		driver.findElement(By.id("username")).sendKeys("username@gmail.com");
