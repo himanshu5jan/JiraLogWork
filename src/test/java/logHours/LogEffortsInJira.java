@@ -100,7 +100,7 @@ public class LogEffortsInJira {
 		return data;
 	}
 	
-	@Test(priority=1)
+	@Test(priority=1,description="starting it here")
 	public void jiraLoginTest() {
 		logger=report.startTest("JiraLoginTest");
 		driver.get("https://himanshupandey.atlassian.net");
