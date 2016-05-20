@@ -7,10 +7,6 @@ import java.util.Date;
 import library.ReadData;
 //import library.XLDataConfig;
 
-
-
-
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -81,8 +77,8 @@ public class LogEfforts {
 	@Test(priority=1)
 	public void jiraLoginTest() {
 		//driver.get("https://himanshupandey.atlassian.net");
-		//driver.findElement(By.id("username")).sendKeys("himanshu.tech10@gmail.com");
-		//driver.findElement(By.id("password")).sendKeys("Hi8pandey$");
+		//driver.findElement(By.id("username")).sendKeys("himanshu.tech@gmail.com");
+		//driver.findElement(By.id("password")).sendKeys("");
 		logger=report.startTest("JIRALOGIN");
 		driver.get("https://jira.inside.1-stop.biz/");
 		try {
@@ -94,10 +90,10 @@ public class LogEfforts {
 	    driver.switchTo().frame("gadget-0");	
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-form-username")));
 		//driver.findElement(By.id("login-form-username")).sendKeys("username");
-		driver.findElement(By.id("login-form-username")).sendKeys("rghai");
+		driver.findElement(By.id("login-form-username")).sendKeys("hpandey");
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-form-password")));
 		//driver.findElement(By.id("login-form-password")).sendKeys("password");
-		driver.findElement(By.id("login-form-password")).sendKeys("Teryonly4u");
+		driver.findElement(By.id("login-form-password")).sendKeys("");
 		wait.until(ExpectedConditions.elementToBeClickable(By.id("login"))).click();
 		driver.switchTo().defaultContent();
 		logger.log(LogStatus.INFO, "Login done");

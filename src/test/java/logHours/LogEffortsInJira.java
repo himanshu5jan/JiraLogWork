@@ -1,6 +1,7 @@
 package logHours;
 
 import java.io.File;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,12 +12,7 @@ import java.util.Date;
 import library.ReadData;
 //import library.XLDataConfig;
 
-
-
-
-
-
-
+import library.genReport;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -28,6 +24,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.ITestResult;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -38,7 +35,7 @@ import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import com.thoughtworks.selenium.Wait;
-
+import com.thoughtworks.selenium.Wait;
 public class LogEffortsInJira {
 	int rowCount;
 	int colCount;
@@ -54,15 +51,20 @@ public class LogEffortsInJira {
 	int logworkflag=0;
 	ExtentReports report;
 	ExtentTest logger;
-	
+	//genReport extreport;
+	WebDriverWait wait;
 	@BeforeClass
 	public void readXLTest() {
-		String reportPath="C:\\Users\\hpandey\\workspace\\Luna\\JiraLogin\\Reports\\JiraReport.html";
-		report=new ExtentReports(reportPath);
+		//String reportPath="C:\\Users\\hpandey\\workspace\\Luna\\JiraLogin\\Reports\\JiraReport.html";
+		//report=new ExtentReports(reportPath);
+		
+		report = new ExtentReports("Reports//LogEffortsinJira.html");
+		//extreport=new genReport("Reports//LogEffortsinJira2.html");
 		driver=new FirefoxDriver();
 		//wait=new WebDriverWait(driver,10);
 		fileName="C:\\Users\\hpandey\\workspace\\Luna\\JiraLogin\\TestData\\TestData.xlsx";
 		fileName2="C:\\Users\\hpandey\\workspace\\Luna\\JiraLogin\\TestData\\TestData2.xlsx";
+		wait=new WebDriverWait(driver,30);
 		wb=new XSSFWorkbook();
 		//sheet=wb.createSheet(fileName);
 		excel=new ReadData(fileName);
@@ -70,12 +72,12 @@ public class LogEffortsInJira {
 		rowNum=0;
 		sheetCount=excel.getSheetCount();
 		//chk value in 5th column
-		String col4=excel.getData(0,0,4);
+		/*String col4=excel.getData(0,0,4);
 		System.out.println("Column 4 = "+col4);
 		if(col4.contains("LOG")) {
 			System.out.println("Effort Logging is attempted with the current data. If it had failed, To reattempt clear the results column and retry ");
 			System.exit(0);
-		}
+		}*/
 		System.out.println("Total Sheets= "+sheetCount);
 		System.out.println("Total Rows= "+rowCount);
 		
@@ -103,17 +105,27 @@ public class LogEffortsInJira {
 	@Test(priority=1,description="starting it here")
 	public void jiraLoginTest() {
 		// version 2
-		logger=report.startTest("JiraLoginTest");
-		driver.get("https://himanshupandey.atlassian.net");
-		driver.findElement(By.id("username")).sendKeys("username@gmail.com");
-		driver.findElement(By.id("password")).sendKeys("password");
 		
-		/*driver.get("https://jira.inside.1-stop.biz/");
-		driver.findElement(By.id("username")).sendKeys("hpandey");
-		driver.findElement(By.id("password")).sendKeys("Hi$$w8rr");*/
-		driver.findElement(By.id("login")).click();
+		logger=report.startTest("JiraLoginTest");
+		
+		
+		driver.get("https://jira.inside.1-stop.biz/");
+		logger.log(LogStatus.INFO,"Browser started");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-form-username")));
+		//driver.findElement(By.id("username")).sendKeys("himanshu.tech@gmail.com");
+		//driver.findElement(By.id("password")).sendKeys("");
+		driver.findElement(By.id("login-form-username")).sendKeys("hy");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-form-password")));
+		driver.findElement(By.id("login-form-password")).sendKeys("");
+				
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("login"))).click();
+		//driver.findElement(By.id("login")).click();
+		
+		logger.log(LogStatus.INFO,"Username Password Entered");
 		Assert.assertTrue(driver.getTitle().contains("Dashboard"));
 		logger.log(LogStatus.PASS,"Login is Passed");
+		
+		
 	}
 
 	/*@Test(priority=2)
@@ -122,7 +134,7 @@ public class LogEffortsInJira {
 		driver.findElement(By.id("quickSearchInput")).sendKeys(Keys.ENTER);
 	}*/
 	
-	//@Test(priority=2,dataProvider="JiraTasks")
+	@Test(priority=2,dataProvider="JiraTasks")
 	public void logWorkTest(String tDesc, String tNum, String tHours, Date tDate) throws Exception {
 		
 		System.out.println("tDesc = "+tDesc);
@@ -219,7 +231,14 @@ public class LogEffortsInJira {
 			System.out.println("Test Case "+tName+" Passed !!");
 		}
 		
+		
+		
+	}
+	
+	@AfterClass
+	public void teardown() {
 		report.endTest(logger);
 		report.flush();
+		
 	}
 }
